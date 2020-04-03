@@ -20,7 +20,7 @@ let verificaToken = (req, res, next) => {
 
         req.usuario = decoded.usuario;
         next();
-    })
+    });
 };
 
 // =======================
@@ -42,9 +42,33 @@ let verificaAdmin_Role = (req, res, next) => {
     }
 };
 
+// ============================
+//  Verificar Token para imagen
+// ============================
+let verificaTokenImg = (req, res, next) => {
+
+    let token = req.query.token;
+
+    jwt.verify(token, process.env.SEED, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                err: {
+                    message: 'Token no válido'
+                }
+            });
+        }
+
+        req.usuario = decoded.usuario;
+        next();
+    });
+
+};
+
 module.exports = {
     verificaToken,
-    verificaAdmin_Role
+    verificaAdmin_Role,
+    verificaTokenImg
 }
 
 // Tambien se puede hacer el export al declarar la función module.exports.verificaToken = (req, res, next) =>{}
